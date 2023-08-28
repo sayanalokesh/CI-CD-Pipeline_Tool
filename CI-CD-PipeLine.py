@@ -21,13 +21,23 @@ def get_new_commits(owner, repo, access_token, last_commit_sha=None):
     response = requests.get(url, headers=headers, params=params)
 
     if response.status_code == 200:
-        commits = response.json
-        return commits()
+        commits = response.json()
+        return commits
     
     else:
         print("Failed to get the commits")
         return[]
     
+def check_index_html_update(commits, repo, access_token):
+    for commit in commits:
+        commit_hash = commit['sha']
+        files_changed = commit.get('files', [])
+        
+        for file in files_changed:
+            if file.get('filename') == 'index.html':
+                return True
+    return False
+
 def save_commit_ids(commits, log_file):  #save the commits performed on the index file into log_file
     with open(log_file, 'a') as file:
         for commit in commits:
@@ -40,19 +50,49 @@ def save_commit_ids(commits, log_file):  #save the commits performed on the inde
             file.write(log_entry)
 
 def main():
-    
-    last_commit = '2ef80533b644bbe50207cce6692f73a900708037'
-
+      
+    last_commit_sha = '2ef80533b644bbe50207cce6692f73a900708037'
     log_file = 'commit_log.txt'
-
-    commits = get_new_commits(owner, repo, access_token, last_commit)
-
+    
+    commits = get_new_commits(owner, repo, access_token, last_commit_sha)
+    
     if commits:
-        save_commit_ids(commits, log_file)
-        print(f"Found new commit and saved {len(commits)} commits to {log_file}.")
-
+        if check_index_html_update(commits, repo, access_token):
+            save_commit_ids(commits, log_file)
+            print(f"Saved {len(commits)} commits to {log_file}.")
+        else:
+            print("No update in index.html file.")
     else:
         print("No new commits found.")
 
 if __name__ == "__main__":
     main()
+    
+# def save_commit_ids(commits, log_file):  #save the commits performed on the index file into log_file
+#     with open(log_file, 'a') as file:
+#         for commit in commits:
+#             commit_id = commit['sha']
+#             commit_message = commit['commit']['message']
+#             commit_author = commit['commit']['author']['name']
+#             commit_date = commit['commit']['author']['date']
+
+#             log_entry = f"Commit Hash: {commit_id}\nAuthor: {commit_author}\nDate: {commit_date}\nMessage: {commit_message}\n\n"
+#             file.write(log_entry)
+
+# def main():
+    
+#     last_commit = '2ef80533b644bbe50207cce6692f73a900708037'
+
+#     log_file = 'commit_log.txt'
+
+#     commits = get_new_commits(owner, repo, access_token, last_commit)
+
+#     if commits:
+#         save_commit_ids(commits, log_file)
+#         print(f"Found new commit and saved {len(commits)} commits to {log_file}.")
+
+#     else:
+#         print("No new commits found.")
+
+# if __name__ == "__main__":
+#     main()
