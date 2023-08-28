@@ -32,9 +32,13 @@ def check_index_html_update(commits, repo, access_token):
     for commit in commits:
         commit_hash = commit['sha']
         files_changed = commit.get('files', [])
+
+        print(f"Commit Hash: {commit_hash}")
+        print("Files Changed:", [file['filename'] for file in files_changed])
         
         for file in files_changed:
             if file.get('filename') == 'index.html':
+                print("Found index.html change.")
                 return True
     return False
 
@@ -61,7 +65,7 @@ def main():
             save_commit_ids(commits, log_file)
             print(f"Saved {len(commits)} commits to {log_file}.")
         else:
-            print("No update in index.html file.")
+            print("No new commit id found and index file is not updated.")
     else:
         print("No new commits found.")
 
