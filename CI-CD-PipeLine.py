@@ -1,103 +1,41 @@
+import os
 import requests
 from config import *
-import os
 
-# defining the Git repo details to check the commit id's using API
-def get_new_commits(owner, repo, access_token, last_commit_sha):
+# providing the access token
+headers = {
+    'Authorization': f'Bearer {access_token}'
+}
 
-    # Git api
-    url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+# API URL to get latest commit
+url = f'https://api.github.com/repos/{owner}/{repo}/branches/{branch}' # url of the repo from where we are getting the details
+response = requests.get(url, headers=headers) # I'm asking to get the details from the page and authorising the page with the access token, once I get the response and asking to store in the variable
+
+if response.status_code == 200: # we have the get response and asking to check the below details
+   
+    latest_commit_hash = response.json()['commit']['sha'] # I'm asking to check the 'sha' from the 'commit'
     
-    # Authorizing the token details
-    headers = {
-        "Authorization": f"Bearer {access_token}"
-    }
+else:
+
+    print("Error fetching commit hash:", response.text)
+    latest_commit_hash = None
+
+# Check if there's a new commit
+previous_commit_hash_file = 'previous_commit_hash.txt' # assigning the file name(previous_commit_hash.txt) which is a string to the variable previous_commit_hash_file(it won't check for the content of the file)
+
+# Below 3 lines will read the content of the file which is stored in previous_commit_hash_file variable and in the 2nd line it stores the content of the file in previous_commit_hash variable
+if os.path.exists(previous_commit_hash_file):
+    with open(previous_commit_hash_file, 'r') as file: 
+        previous_commit_hash = file.read().strip()
+else:
+    previous_commit_hash = None
     
-    # The parameters help in fetching commits in batches and starting from a specific commit. In this case, I've mentioned the first commit performed to the repo.
-    params = {
-        "per_page": 100,  # Adjust as needed. This parameter specifies the number of commits to be returned per page. I've set the requests to 100, which means the API will return up to 100 commits in a single response.
-        "sha": last_commit_sha
-    }
-    response = requests.get(url, headers=headers, params=params)
-
-    if response.status_code == 200:
-        commits = response.json()
-        return commits
+# If latest_commit_hash is defined and is not null and is not equal to previous_commit_hash
+if latest_commit_hash and latest_commit_hash != previous_commit_hash:
+    print("New commit detected:", latest_commit_hash)
     
-    else:
-        print("Failed to get the commits")
-        return[]
-    
-def check_index_html_update(commits):
-    for commit in commits:
-        commit_hash = commit['sha']
-        files_changed = commit.get('files', [])
+    with open(previous_commit_hash_file, 'w') as file:
+        file.write(latest_commit_hash + '\n')
 
-        print(f"Commit Hash: {commit_hash}")
-        print("Files Changed:", [file['filename'] for file in files_changed])
-        
-        for file in files_changed:
-            if file.get('filename') == 'index.html':
-                print("Found index.html change.")
-                return True
-    return False
-
-def save_commit_ids(commits, log_file):  #save the commits performed on the index file into log_file
-    with open(log_file, 'a') as file:
-        for commit in commits:
-            commit_id = commit['sha']
-            commit_message = commit['commit']['message']
-            commit_author = commit['commit']['author']['name']
-            commit_date = commit['commit']['author']['date']
-
-            log_entry = f"Commit Hash: {commit_id}\nAuthor: {commit_author}\nDate: {commit_date}\nMessage: {commit_message}\n\n"
-            file.write(log_entry)
-
-def main():
-      
-    last_commit_sha = '2ef80533b644bbe50207cce6692f73a900708037'
-    log_file = 'commit_log.txt'
-    
-    commits = get_new_commits(owner, repo, access_token, last_commit_sha)
-        
-    if commits:
-        print(f"Commits {commits}")
-        if check_index_html_update(commits):
-            save_commit_ids(commits, log_file)
-            print(f"Saved {len(commits)} commits to {log_file}.")
-        else:
-            print("No new commit id found and index file is not updated.")
-    else:
-        print("No new commits found.")
-
-if __name__ == "__main__":
-    main()
-    
-# def save_commit_ids(commits, log_file):  #save the commits performed on the index file into log_file
-#     with open(log_file, 'a') as file:
-#         for commit in commits:
-#             commit_id = commit['sha']
-#             commit_message = commit['commit']['message']
-#             commit_author = commit['commit']['author']['name']
-#             commit_date = commit['commit']['author']['date']
-
-#             log_entry = f"Commit Hash: {commit_id}\nAuthor: {commit_author}\nDate: {commit_date}\nMessage: {commit_message}\n\n"
-#             file.write(log_entry)
-
-# def main():
-    
-#     last_commit = '2ef80533b644bbe50207cce6692f73a900708037'
-
-#     log_file = 'commit_log.txt'
-
-#     commits = get_new_commits(owner, repo, access_token, last_commit)
-
-#     if commits:
-#         save_commit_ids(commits, log_file)
-#         print(f"Found new commit and saved {len(commits)} commits to {log_file}.")
-
-#     else:
-#         print("No new commits found.")
-
-# if __name__ == "__main__":
-#     main()
+else:
+    print("No new commits or no update in index.html file.")
