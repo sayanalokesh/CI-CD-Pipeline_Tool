@@ -3,7 +3,7 @@ from config import *
 import os
 
 # defining the Git repo details to check the commit id's using API
-def get_new_commits(owner, repo, access_token, last_commit_sha=None):
+def get_new_commits(owner, repo, access_token, last_commit_sha='2ef80533b644bbe50207cce6692f73a900708037'):
 
     # Git api
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"
@@ -28,7 +28,7 @@ def get_new_commits(owner, repo, access_token, last_commit_sha=None):
         print("Failed to get the commits")
         return[]
     
-def check_index_html_update(commits, repo, access_token):
+def check_index_html_update(commits):
     for commit in commits:
         commit_hash = commit['sha']
         files_changed = commit.get('files', [])
@@ -61,7 +61,7 @@ def main():
     commits = get_new_commits(owner, repo, access_token, last_commit_sha)
     
     if commits:
-        if check_index_html_update(commits, repo, access_token):
+        if check_index_html_update(commits):
             save_commit_ids(commits, log_file)
             print(f"Saved {len(commits)} commits to {log_file}.")
         else:
