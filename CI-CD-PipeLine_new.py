@@ -20,9 +20,12 @@ url = f'https://api.github.com/repos/{owner}/{repo}/branches/{branch}' # url of 
 response = requests.get(url, headers=headers) # I'm asking to get the details from the page and authorising the page with the access token, once I get the response and asking to store in the variable
 
 if response.status_code == 200: # we have the get response and asking to check the below details
+   
     latest_commit_hash = response.json()['commit']['sha'] # I'm asking to check the 'sha' from the 'commit'
-    append_commit_id(latest_commit_hash)
+    # append_commit_id(latest_commit_hash)
+
 else:
+
     print("Error fetching commit hash:", response.text)
     latest_commit_hash = None
 
@@ -38,11 +41,11 @@ else:
     
 # If latest_commit_hash is defined and is not null and is not equal to previous_commit_hash
 if latest_commit_hash and latest_commit_hash != previous_commit_hash:
-    append_commit_id(latest_commit_hash)
+    # append_commit_id(latest_commit_hash)
     print("New commit detected:", latest_commit_hash)
 
     with open(previous_commit_hash_file, 'w') as file:
-        file.write(latest_commit_hash)
+        file.write(latest_commit_hash + '\n')
 
 else:
     print("No new commits or no update in index.html file.")
