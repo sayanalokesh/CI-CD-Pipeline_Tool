@@ -39,7 +39,7 @@ else:
 # If latest_commit_hash is defined and is not null and is not equal to previous_commit_hash
 if latest_commit_hash and latest_commit_hash != previous_commit_hash:
     append_commit_id(latest_commit_hash)
-    # print("New commit detected:", latest_commit_hash)
+    print("New commit detected:", latest_commit_hash)
 
     with open(previous_commit_hash_file, 'w') as file:
         file.write(latest_commit_hash)
