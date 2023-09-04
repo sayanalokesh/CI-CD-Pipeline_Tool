@@ -5,7 +5,7 @@ github_repo="https://github.com/sayanalokesh/CI-CD-Pipeline_Tool.git"
 aws_server_repo_path="/home/lokesh/CI-CD-Pipeline_Tool"
 
 # Nginx server path for the index.html file
-nginx_html_path="/var/www/html/autodeploy"
+nginx_html_path="/var/www/html"
 
 # Navigate to the local repository directory
 cd $aws_server_repo_path
