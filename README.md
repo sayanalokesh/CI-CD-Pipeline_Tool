@@ -20,7 +20,7 @@ Creating a CI-CD pipeline without using DevOps tools such as Jenkins, CircleCI e
 1. Launch an AWS EC2 instance or set up a local Linux server. In my case, I have launched an EC2 instance.
 2. Install Nginx on the instance with the command `sudo apt-get install nginx`.
 3. Configure Nginx to serve our HTML project.
-4. You can find the complete configuration of the Nginx and the HTML file in my GitHub repo. To check please click [here](https://github.com/sayanalokesh/AutomateDeployment.git).
+4. You can find the complete configuration of the Nginx and the HTML file in my GitHub repo. To check please click [here](https://github.com/sayanalokesh/herovired_devops_assignment.git) and go to the Networkings&Servers find Assignment_3.pdf.
 
 ## Task 3: Write a Python Script to Check for New Commits
 1. Create a Python script that uses the GitHub API to check for new commits in our GitHub repository.
