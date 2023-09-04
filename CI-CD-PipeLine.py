@@ -2,19 +2,6 @@ import os
 import requests
 from config import *
 import subprocess
-# import json
-
-# with open('config.json', 'r') as config_json:
-#     config = json.load(config_json)
-#     print(config)
-
-# access_token = config['access_token']
-# owner = config['owner']
-# repo = config['repo']
-# branch = config['branch']
-# local_repo = config['local_repo']
-# nginx_path = config['nginx_path']
-# files_to_copy = config['files_to_copy']
 
 # providing the access token
 headers = {
