@@ -34,7 +34,8 @@ Creating a CI-CD pipeline without using DevOps tools such as Jenkins, CircleCI e
 
 ## Task 5: Set Up a Cron Job to Run the Python Script
 1. To automate this process, we need to create a cron job on our server to run the Python script at regular intervals.
-2. The Python script will periodically check for new commits, triggering the deployment script if there are new changes.
+2. * * * * * /usr/bin/python3 /home/lokesh/CI-CD-Pipeline_Tool/CI-CD-PipeLine.py >> /home/lokesh/CI-CD-Pipeline_Tool/output.log 2>&1
+3. The Python script will periodically check for new commits, triggering the deployment script if there are new changes.
 
 ## Task 6: Test the Setup
 1. To test this code, make a new commit to our GitHub repository by changing something to the index file.
