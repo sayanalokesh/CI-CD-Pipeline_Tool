@@ -1,30 +1,36 @@
 #!/bin/bash
 
-# github and aws server local repo
+# GitHub repository URL
 github_repo="https://github.com/sayanalokesh/CI-CD-Pipeline_Tool.git"
-aws_server_repo_path="/home/lokesh/CI-CD-Pipeline_Tool"
+
+# Local repository path
+local_repo_path="/home/lokesh/CI-CD-Pipeline_Tool"
 
 # Nginx server path for the index.html file
-nginx_html_path="/var/www/html"
+nginx_html_path="/var/www/html"  # Replace with your actual Nginx server path
 
-# Navigate to the local repository directory
-cd $aws_server_repo_path
-
-# Pull the latest changes from the GitHub repository
-git pull
-
-# Check if index.html has changed
-if [[ $(git diff --name-only HEAD@{1} HEAD) =~ "index.html" ]]; then
-    # Copy the updated index.html to the Nginx server path
-    sudo cp index.html $nginx_html_path
-    
-    # Restart Nginx
-    sudo systemctl restart nginx
-    
-    echo "index.html updated, and Nginx restarted."
+# Check if the local repository exists
+if [ ! -d "$local_repo_path" ]; then
+    # If the local repository doesn't exist, clone it
+    git clone "$github_repo" "$local_repo_path"
 else
-    echo "No changes detected in index.html."
+    # Navigate to the local repository directory
+    cd "$local_repo_path"
+    # Restore changes
+
+    git restore .
+
+    # Pull the latest changes
+    git pull
+
+    # Copy the updated index.html to the Nginx server path
+    sudo cp index.html "$nginx_html_path"
+    echo "Copied HTML file successfully"
+
+    # Restart Nginx to reflect changes
+    sudo systemctl restart nginx
 fi
+
 
 
 
