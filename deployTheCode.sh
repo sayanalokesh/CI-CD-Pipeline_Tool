@@ -16,6 +16,9 @@ if [ ! -d "$local_repo_path" ]; then
 else
     # Navigate to the local repository directory
     cd "$local_repo_path"
+    # Restore changes
+
+    git restore .
 
     # Pull the latest changes
     git pull
