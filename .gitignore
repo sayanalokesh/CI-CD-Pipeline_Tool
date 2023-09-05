@@ -2,6 +2,7 @@
 config.py
 config.env
 config.json
+previous_commit_hash.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
