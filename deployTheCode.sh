@@ -7,7 +7,7 @@ github_repo="https://github.com/sayanalokesh/CI-CD-Pipeline_Tool.git"
 local_repo_path="/home/lokesh/CI-CD-Pipeline_Tool"
 
 # Nginx server path for the index.html file
-nginx_html_path="/var/www/autodeploy"  # Replace with your actual Nginx server path
+nginx_html_path="/var/www/html"  # Replace with your actual Nginx server path
 
 # Check if the local repository exists
 if [ ! -d "$local_repo_path" ]; then
@@ -25,7 +25,7 @@ else
 
     # Copy the updated index.html to the Nginx server path
     sudo cp index.html "$nginx_html_path"
-    echo "copied index file successfully"
+    echo "Copied HTML file successfully"
 
     # Restart Nginx to reflect changes
     sudo systemctl restart nginx
