@@ -25,6 +25,7 @@ else
 
     # Copy the updated index.html to the Nginx server path
     sudo cp index.html "$nginx_html_path"
+    echo "copied index file successfully"
 
     # Restart Nginx to reflect changes
     sudo systemctl restart nginx
